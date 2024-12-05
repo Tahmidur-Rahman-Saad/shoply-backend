@@ -15,6 +15,5 @@ class CartItems(models.Model):
 class Order(models.Model):
     order_date = models.DateTimeField(auto_now=True)
     confirmation = models.BooleanField()
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE,default=None)
     cart_id = models.ForeignKey(Cart, on_delete=models.CASCADE,default=None)
 
