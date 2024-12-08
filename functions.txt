@@ -1,0 +1,29 @@
+From User App:
+1.show_users(GET): show all the users
+2.retrieve_user(GET): for get only one user
+3.create_user(POST): create a new user
+4. update_user(PUT): Update the user data
+5. delete_user(DELETE): delete the user 
+6.login_user(POST): match the email + hash password 
+
+from Product app:
+1.show_products(GET): show all the products
+2.retrieve_products(GET): for get only one product
+3.show_categories(GET): shows all the categories list
+4.create_product(POST): create new product 
+5.create_categories(POST): create new categories
+6.update_categories(PUT): for updating the selected categories
+7.delete_categories(PUT): for updating the selected categories
+8.delete_products(DELETE): for deleting the selected products
+9.update_products(DELETE): for updating the selected products
+
+from Order app:
+1.show_orders(GET): show all of the orders
+2.retrieve_order(GET): show the selected order
+3.retrieve_cartitem(GET): show the selected cart items
+4.create_cart(POST): create a new cart for selected user
+5.add_to_cartitems(POST): add new cart items for a selected users with quantity
+6.confirm_order(POST): for the order confirmation
+7.update_cartitem(PUT): update any selected cart item
+8.update_order(PUT): for updating the order
+9.delete_cartitem(DELETE): delete any selected item from the cart

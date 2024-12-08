@@ -12,76 +12,112 @@ def all_user(request):
 @api_view(['GET'])
 def show_products(request):
     if request.method == 'GET':
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        try:
+            products = Product.objects.all()
+            serializer = ProductSerializer(products, many=True)
+            return Response({"message": "Shows all product list successfully",'Products':serializer.data}
+                        , status=status.HTTP_200_OK)
+        except:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
 def retrieve_products(request,pk):
     if request.method == 'GET':
-        product = Product.objects.get(pk=pk)
-        serializer = ProductSerializer(product)
-        return Response(serializer.data)
+        try:
+            product = Product.objects.get(pk=pk)
+            serializer = ProductSerializer(product)
+            return Response({"message": "Shows product successfully",'Product':serializer.data}
+                        , status=status.HTTP_200_OK)
+        except: 
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['GET'])
 def show_categories(request):
     if request.method == 'GET':
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
+        try:
+            categories = Category.objects.all()
+            serializer = CategorySerializer(categories, many=True)
+            return Response({"message": "Shows all categories successfully",'Product':serializer.data}
+                        , status=status.HTTP_200_OK)
+        except:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['POST'])
 def create_product(request):
     if request.method == 'POST':
-        serializer = ProductSerializer(data=request.data)
-        if(serializer.is_valid()):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = ProductSerializer(data=request.data)
+            if(serializer.is_valid()):
+                serializer.save()
+                return Response({"message": "Product Created successfully",'Product':serializer.data},
+                                status=status.HTTP_201_CREATED)
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
 @api_view(['POST'])
 def create_categories(request):
     if request.method == 'POST':
-        serializer = CategorySerializer(data=request.data)
-        if(serializer.is_valid()):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = CategorySerializer(data=request.data)
+            if(serializer.is_valid()):
+                serializer.save()
+                return Response({"message": "Product categories Created successfully",'Categories':serializer.data},
+                                 status=status.HTTP_201_CREATED)
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
 def update_categories(request,pk):
     if request.method == 'PUT':
-        category = Category.objects.get(pk = pk)
-        serializer = CategorySerializer(category, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        try:
+            category = Category.objects.get(pk = pk)
+            serializer = CategorySerializer(category, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Update categories successfully",'Categories':serializer.data},
+                                 status=status.HTTP_201_CREATED)
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 @api_view(['DELETE'])
 def delete_categories(request,pk):
     if request.method == 'DELETE':
-        category = Category.objects.get(pk = pk)
-        category.delete()
-        return Response({"message": "Categories deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            category = Category.objects.get(pk = pk)
+            category.delete()
+            return Response({"message": "Categories deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except:
+            return Response({"message": "Categories not deleted!!!."}, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['PUT'])
 def update_products(request,pk):
     if request.method == 'PUT':
-        product = Product.objects.get(pk = pk)
-        serializer = ProductSerializer(product, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        try:
+            product = Product.objects.get(pk = pk)
+            serializer = ProductSerializer(product, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Update products successfully",'Products':serializer.data},
+                                 status=status.HTTP_201_CREATED)
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['DELETE'])
 def delete_products(request,pk):
     if request.method == 'DELETE':
-        product = Product.objects.get(pk = pk)
-        product.delete()
-        return Response({"message": "products deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            product = Product.objects.get(pk = pk)
+            product.delete()
+            return Response({"message": "products deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except:
+            return Response({"message": "Products not deleted!!!."}, status=status.HTTP_400_BAD_REQUEST)
 
