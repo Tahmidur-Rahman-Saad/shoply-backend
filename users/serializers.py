@@ -1,15 +1,18 @@
 from rest_framework import serializers
-from .models import User
-from django.contrib.auth.hashers import make_password, check_password
+from .models import Customer,AdminInfo
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Customer
         fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True} 
-        }
+        
+    
+class AdminInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminInfo
+        fields = '__all__'
+        
     
 
 

@@ -6,10 +6,10 @@ from . import views
 
 urlpatterns = [
     path('',views.all_user),
-    path('create-user/',views.create_user),
-    path('show-users/',views.show_users),
-    path('retrieve-user/<int:pk>/',views.retrieve_user),
-    path('login-user/',views.login_user),
+    path('create-customer/',views.create_customer),
+    path('show-customers/',views.show_customers),
+    path('retrieve-customer/<int:pk>/',views.retrieve_customer),
+    path('login-customer/',views.login_customer),
 ]
 
 # urlpatterns += [
