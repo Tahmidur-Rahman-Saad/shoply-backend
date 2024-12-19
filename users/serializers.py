@@ -21,3 +21,25 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         # fields = ['username','first_name','last_name','email','password']
         fields = '__all__'
+
+
+#custom serializer for retrieving customer or admin data
+class UserReadSerializer(serializers.ModelSerializer):
+    additional_info = serializers.SerializerMethodField('get_additional_info')
+
+    def get_additional_info(self, instance ):
+
+        if not instance.is_staff:
+            info = Customer.objects.get(user = instance.id)
+            return CustomerSerializer(info).data
+        else:
+            info = AdminInfo.objects.get(user = instance.id)
+            return AdminInfoSerializer(info).data
+        
+
+
+    class Meta:
+        model = User
+        fields = '__all__'
+    
+

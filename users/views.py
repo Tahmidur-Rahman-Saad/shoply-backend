@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Customer,AdminInfo
 from django.contrib.auth.models import User
-from .serializers import CustomerSerializer,AdminInfoSerializer,UserSerializer
+from .serializers import CustomerSerializer,AdminInfoSerializer, UserReadSerializer,UserSerializer
 
 
 # Create your views here.
@@ -159,82 +159,50 @@ def delete_admininfo(request,pk):
 
 
 
-# @api_view(['POST'])
-# def login_customer(request):
-#     if request.method == 'POST':
-#         email = request.data.get('email')
-#         password = request.data.get('password')
+@api_view(['POST'])
+def login_user(request):
+    if request.method == 'POST':
+        username = request.data.get('username')
+        password = request.data.get('password')
 
-#         if not email or not password :
-#             return Response({'error': 'Email and password are required.'}, 
-#                     status=status.HTTP_400_BAD_REQUEST)
-#         try:       
-#             customer = Customer.objects.get(email=email)
-#             if check_password(password, customer.password): 
-
-#                 serializer = CustomerSerializer(customer)
-#                 return Response(
-#                     {'message': 'Login successful!',
-#                       'customer': serializer.data}, 
-#                     status=status.HTTP_200_OK
-#                 )
+        if not username or not password :
+            return Response({'error': 'Username and Password are required.'}, 
+                    status=status.HTTP_400_BAD_REQUEST)
+        try:       
+            user =User.objects.get(username=username)
+            if password ==user.password: 
+                serializer1 = UserReadSerializer(user)
+                # user_id =  serializer1.data['id']
                 
-#             else:
-#                 return Response(
-#                     {'error': 'Invalid password.'}, 
-#                     status=status.HTTP_401_UNAUTHORIZED
-#                 )
-#         except:
-#             return Response({'error': 'customer not found.'},status=status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {'message': 'Login successful!',
+                      'customer': serializer1.data}, 
+                    status=status.HTTP_200_OK
+                )             
+            else:
+                return Response(
+                    {'error': 'Invalid password.'}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+        except:
+            return Response({'error': 'customer not found.'},status=status.HTTP_404_NOT_FOUND)
 
 
 
-#Customer & user created at the same time
-# @api_view(['POST'])
-# def create_user_customer(request):
-#     try:
-#         data = request.data
-#         data1 ={
-#             'username': data['username'],
-#             'first_name': data['first_name'],
-#             'last_name': data['last_name'],
-#             'email':data['email'],
-#             'password': data['password']
-#         }
-#         serializer1 = UserSerializer(data=data1)
-#         if serializer1.is_valid():
-#             serializer1.save()
-#             user = User.objects.get(username=data1['username'])
-            
 
-#     except:
-#         return Response(serializer1.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-#     try:
-#         data = request.data
-#         data2 = {
-#             'user' : user['user_id'],
-#             'phone' :data['phone']
-#         }
-#         serializer2 = CustomerSerializer(data=data2)
-#         if serializer2.is_valid():
-#             serializer2.save()
-#             return Response({'message': 'Create Usersuccessfully!', 'Customer': serializer2.data}, 
-#                 status=status.HTTP_201_CREATED)
-#     except:
-#        return Response(serializer2.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+#Customer & user is created at the same time
 @api_view(['POST'])
 def create_user_customer(request):
     try:
+        #after using try except, must be give response 
         data = request.data
         data1 ={
             'username': data['username'],
             'first_name': data['first_name'],
             'last_name': data['last_name'],
             'email':data['email'],
-            'password': data['password']
+            'password': data['password'],
+            'is_staff' : data['is_staff']
         }
 
         data2 = {
@@ -251,8 +219,51 @@ def create_user_customer(request):
             user = User.objects.get(username=data1['username'])
             serializer2.save(user = user)
 
-            return Response({'message': 'Create Usersuccessfully!'}, 
+            return Response({'message': 'Create Customer successfully!'}, 
                 status=status.HTTP_201_CREATED)
             
     except:
        return Response(serializer1.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+#AdminInfo & user is created at the same time
+@api_view(['POST'])
+def create_user_admininfo(request):
+    try:
+        #after using try except, must be give response 
+        data = request.data
+        data1 ={
+            'username': data['username'],
+            'first_name': data['first_name'],
+            'last_name': data['last_name'],
+            'email': data['email'],
+            'password': data['password'],
+            
+        }
+
+        data2 = {
+            'phone' :data['phone'],
+            'nid' : data['nid']
+            # 'image' : data['image']
+        }
+        serializer1 = UserSerializer(data=data1)
+        serializer2 = AdminInfoSerializer(data=data2)
+
+
+        if serializer1.is_valid() and serializer2.is_valid():
+
+            print("inside serializer1")
+            user_serializer = serializer1.save()
+            user = User.objects.get(username=data1['username'])
+            user.is_staff = True
+            user.save()
+            serializer2.save(user = user)
+
+            return Response({'message': 'Create Admin successfully!'}, 
+                status=status.HTTP_201_CREATED)
+            
+    except:
+       return Response(serializer1.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
