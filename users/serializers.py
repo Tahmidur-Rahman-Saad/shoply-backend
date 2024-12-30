@@ -21,6 +21,21 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         # fields = ['username','first_name','last_name','email','password']
         fields = '__all__'
+    
+
+# class UserLoginSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         # fields = ['username','password']
+#         fields = '__all__'
+
+
+
+
+class UserLoginSerializer(serializers.Serializer):  # Use Serializer, not ModelSerializer
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
+
 
 
 #custom serializer for retrieving customer or admin data
