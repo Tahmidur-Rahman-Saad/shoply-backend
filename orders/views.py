@@ -4,6 +4,7 @@ from rest_framework import status
 from .models import Cart,Order,CartItems
 from .serializers import CartSerializer, OrderSerializer,CartItemsSerializer
 
+
 @api_view(['GET'])
 def show_orders(request):
     if request.method == 'GET':
@@ -28,6 +29,7 @@ def retrieve_order(request,pk):
         except:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+
  
 @api_view(['GET'])
 def retrieve_cartitem(request,pk):
@@ -39,6 +41,7 @@ def retrieve_cartitem(request,pk):
                         , status=status.HTTP_200_OK)
         except:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])
@@ -55,6 +58,8 @@ def create_cart(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+
+
 @api_view(['POST'])
 def add_to_cartitems(request,pk):
     if request.method == 'POST':
@@ -69,6 +74,8 @@ def add_to_cartitems(request,pk):
                                  status=status.HTTP_201_CREATED)
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['POST'])
@@ -87,6 +94,9 @@ def confirm_order(request,pk):
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
 @api_view(['PUT'])
 def update_cartitem(request, pk):
     if request.method == 'PUT':
@@ -100,7 +110,10 @@ def update_cartitem(request, pk):
             
         except:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+
+
 @api_view(['PUT'])
 def update_order(request, pk):
     if request.method == 'PUT':
@@ -114,6 +127,8 @@ def update_order(request, pk):
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+
 
 @api_view(['DELETE'])
 def delete_cartitem(request, pk):

@@ -5,9 +5,6 @@ from .models import Product,Category
 from .serializers import ProductSerializer,CategorySerializer
 from django.http import HttpResponse
 
-# Create your views here.
-def all_user(request):
-    return HttpResponse("Hello World")
 
 @api_view(['GET'])
 def show_products(request):
@@ -19,7 +16,9 @@ def show_products(request):
                         , status=status.HTTP_200_OK)
         except:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+
 @api_view(['GET'])
 def retrieve_products(request,pk):
     if request.method == 'GET':
@@ -31,7 +30,8 @@ def retrieve_products(request,pk):
         except: 
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    
+
+
 @api_view(['GET'])
 def show_categories(request):
     if request.method == 'GET':
@@ -43,7 +43,9 @@ def show_categories(request):
         except:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    
+
+
+
 @api_view(['POST'])
 def create_product(request):
     if request.method == 'POST':
@@ -55,7 +57,9 @@ def create_product(request):
                                 status=status.HTTP_201_CREATED)
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+
 
 @api_view(['POST'])
 def create_categories(request):
@@ -68,6 +72,8 @@ def create_categories(request):
                                  status=status.HTTP_201_CREATED)
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['PUT'])
@@ -96,6 +102,8 @@ def delete_categories(request,pk):
             return Response({"message": "Categories not deleted!!!."}, status=status.HTTP_400_BAD_REQUEST)
     
 
+
+
 @api_view(['PUT'])
 def update_products(request,pk):
     if request.method == 'PUT':
@@ -108,6 +116,7 @@ def update_products(request,pk):
                                  status=status.HTTP_201_CREATED)
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

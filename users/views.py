@@ -7,17 +7,9 @@ from django.contrib.auth.models import User
 from .serializers import CustomerSerializer,AdminInfoSerializer, UserReadSerializer,UserSerializer,UserLoginSerializer
 from django.contrib.auth.hashers import make_password,check_password
 from django.core.exceptions import ObjectDoesNotExist
-
-#use for jwt authentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , IsAdminUser
 from rest_framework_simplejwt.tokens import RefreshToken
-# from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import permission_classes
-
-
-# Create your views here.
-def all_user(request):
-    return HttpResponse("Hello World")
 
 
 #shows all the customers
@@ -36,7 +28,7 @@ def show_customers(request):
 
 #shows all the admins & their informations
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def show_admininfos(request):
     if request.method == 'GET':
         try:
@@ -50,6 +42,7 @@ def show_admininfos(request):
 
 #get all of the information for a selected customer
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def retrieve_customer(request,pk):
     if request.method == 'GET':
         try:    
@@ -63,6 +56,7 @@ def retrieve_customer(request,pk):
 
 #get all of the information for a selected Admin
 @api_view(['GET'])
+@permission_classes([IsAdminUser])
 def retrieve_admininfo(request,pk):
     if request.method == 'GET':
         try:    
@@ -94,6 +88,7 @@ def create_customer(request):
 
 #create a new Admin with given user
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def create_admininfo(request):
     if request.method == 'POST':
         try:
@@ -126,6 +121,7 @@ def update_customer(request,pk):
 
 #Update the selected admin
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def update_admininfo(request,pk):
     if request.method == 'PUT':
         try:    
