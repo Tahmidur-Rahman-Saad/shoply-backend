@@ -13,9 +13,9 @@ urlpatterns = [
     path('create-user&customer/',views.create_user_customer),
     path('create-user&admin/',views.create_user_admininfo),
     path('reset-password/',views.reset_password),
-    path('update_customer/',views.update_customer),
-    path('delete_customer/',views.delete_customer),
-    path('update_admin/',views.update_admininfo),
-    path('delete_admin/',views.delete_admininfo),
+    path('update-customer/',views.update_customer),
+    path('delete-customer/',views.delete_customer),
+    path('update-admin/',views.update_admininfo),
+    path('delete-admin/',views.delete_admininfo),
 
 ]
