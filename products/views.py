@@ -4,6 +4,9 @@ from rest_framework import status
 from .models import Product,Category
 from .serializers import ProductSerializer,CategorySerializer
 from django.http import HttpResponse
+from rest_framework.permissions import IsAuthenticated , IsAdminUser
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import permission_classes
 
 
 @api_view(['GET'])
@@ -47,6 +50,7 @@ def show_categories(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def create_product(request):
     if request.method == 'POST':
         try:
@@ -62,6 +66,7 @@ def create_product(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def create_categories(request):
     if request.method == 'POST':
         try:
@@ -77,6 +82,7 @@ def create_categories(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def update_categories(request,pk):
     if request.method == 'PUT':
         try:
@@ -92,6 +98,7 @@ def update_categories(request,pk):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def delete_categories(request,pk):
     if request.method == 'DELETE':
         try:
@@ -105,6 +112,7 @@ def delete_categories(request,pk):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def update_products(request,pk):
     if request.method == 'PUT':
         try:
@@ -121,6 +129,7 @@ def update_products(request,pk):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def delete_products(request,pk):
     if request.method == 'DELETE':
         try:

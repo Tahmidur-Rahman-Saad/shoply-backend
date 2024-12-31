@@ -330,3 +330,26 @@ def login_user(request):
 
         return Response({'error': 'customer not found.'},status=status.HTTP_404_NOT_FOUND)
 
+
+
+#reset password for all types of user
+@api_view(['PATCH'])
+def reset_password(request):
+    username = request.data.get('username')
+    new_password = request.data.get('new_password')
+    confirm_new_password = request.data.get('confirm_new_password')
+    try:
+        user = User.objects.get(username=username)
+        if new_password != confirm_new_password:
+            return Response({'message': 'Password does not match.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        if new_password == user.password:
+            return Response({'message': 'Please change the password. Matched with previous one'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        user.password = new_password
+        user.save()
+        return Response({'message': 'Password has been reset successfully.'},
+                        status=status.HTTP_200_OK)
+
+    except:
+        return Response ({'error': 'User with this username does not exist.'}, status=status.HTTP_404_NOT_FOUND)

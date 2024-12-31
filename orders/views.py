@@ -3,9 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Cart,Order,CartItems
 from .serializers import CartSerializer, OrderSerializer,CartItemsSerializer
+from rest_framework.permissions import IsAuthenticated , IsAdminUser
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import permission_classes
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def show_orders(request):
     if request.method == 'GET':
         try:
@@ -19,6 +23,7 @@ def show_orders(request):
     
     
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def retrieve_order(request,pk):
     if request.method == 'GET':
         try:
@@ -79,16 +84,38 @@ def add_to_cartitems(request,pk):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def confirm_order(request,pk):
     if request.method == 'POST':
         try:    
             data = request.data 
             data['cart_id'] = pk
+            data['confirmation'] = True
             serializer = OrderSerializer(data=data)
         
             if(serializer.is_valid()):
                 serializer.save()
                 return Response({"message": "Order corfirmed!!!",'Order':serializer.data}
+                                , status=status.HTTP_201_CREATED)
+        
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def cancel_order(request,pk):
+    if request.method == 'POST':
+        try:    
+            data = request.data 
+            data['cart_id'] = pk
+            data['confirmation'] = False
+            serializer = OrderSerializer(data=data)
+        
+            if(serializer.is_valid()):
+                serializer.save()
+                return Response({"message": "Order cancelled!!!",'Order':serializer.data}
                                 , status=status.HTTP_201_CREATED)
         
         except:
@@ -115,6 +142,7 @@ def update_cartitem(request, pk):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_order(request, pk):
     if request.method == 'PUT':
         try:
@@ -139,3 +167,31 @@ def delete_cartitem(request, pk):
             return Response({"message": "Cart Item deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
         except:
             return Response({"message": "Not Deleted!!!"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+#show all the confirmed orders
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def show_confirm_orders(request):
+    try:
+        orders = Order.objects.filter(confirmation = True)
+        serializer = OrderSerializer(orders, many=True)
+        return Response({"message": "Show all order list successfully",'Orders':serializer.data}
+                , status=status.HTTP_200_OK)
+        
+    except:
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+#show all the cancel orders
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def show_cancel_orders(request):
+    try:
+        orders = Order.objects.filter(confirmation = False)
+        serializer = OrderSerializer(orders, many=True)
+        return Response({"message": "Show all order list successfully",'Orders':serializer.data}
+                    , status=status.HTTP_200_OK)
+    except:
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
