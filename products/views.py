@@ -81,16 +81,16 @@ def create_categories(request):
 
 
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAdminUser])
 def update_categories(request,pk):
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         try:
             category = Category.objects.get(pk = pk)
-            serializer = CategorySerializer(category, data=request.data)
+            serializer = CategorySerializer(category, data=request.data,partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"message": "Update categories successfully",'Categories':serializer.data},
+                return Response({"message": "Update categories successfully",'Category':serializer.data},
                                  status=status.HTTP_201_CREATED)
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -111,13 +111,13 @@ def delete_categories(request,pk):
 
 
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAdminUser])
 def update_products(request,pk):
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         try:
             product = Product.objects.get(pk = pk)
-            serializer = ProductSerializer(product, data=request.data)
+            serializer = ProductSerializer(product, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response({"message": "Update products successfully",'Products':serializer.data},

@@ -104,9 +104,9 @@ def create_admininfo(request):
 
 
 #Update the selected customer
-@api_view(['PUT'])
+@api_view(['PATCH'])
 def update_customer(request,pk):
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         try:    
             customer = Customer.objects.get(pk = pk)
             serializer = CustomerSerializer(customer, data=request.data)
@@ -120,16 +120,16 @@ def update_customer(request,pk):
 
 
 #Update the selected admin
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAdminUser])
 def update_admininfo(request,pk):
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         try:    
             admininfo = AdminInfo.objects.get(pk = pk)
             serializer = AdminInfoSerializer(admininfo, data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response({'message': 'Update Usersuccessfully!', 'Customer': serializer.data}, 
+                return Response({'message': 'Update User successfully!', 'Admin': serializer.data}, 
                                 status=status.HTTP_201_CREATED)
         except:
             return Response(serializer.errors, 
@@ -138,11 +138,16 @@ def update_admininfo(request,pk):
 
 #delete the selected customer
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_customer(request,pk):
     if request.method == 'DELETE':
         try:    
             customer = Customer.objects.get(pk = pk)
+            user = customer.user
+
             customer.delete()
+            user.delete()
+
             return Response({"message": "Customer deleted successfully."},
                             status=status.HTTP_204_NO_CONTENT)
         except:
@@ -156,7 +161,9 @@ def delete_admininfo(request,pk):
     if request.method == 'DELETE':
         try:    
             admininfo = AdminInfo.objects.get(pk = pk)
+            user = admininfo.user
             admininfo.delete()
+            user.delete()
             return Response({"message": "Admin deleted successfully."},
                             status=status.HTTP_204_NO_CONTENT)
         except:
@@ -219,7 +226,7 @@ def create_user_customer(request):
             'last_name': data['last_name'],
             'email':data['email'],
             'password': data['password'],
-            'is_staff' : data['is_staff']
+            'is_staff' : False
         }
 
         data2 = {

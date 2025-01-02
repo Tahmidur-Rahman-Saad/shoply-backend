@@ -124,12 +124,12 @@ def cancel_order(request,pk):
 
 
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 def update_cartitem(request, pk):
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         try:
             cartitem = CartItems.objects.get(pk=pk)
-            serializer = CartItemsSerializer(cartitem, data=request.data)
+            serializer = CartItemsSerializer(cartitem, data=request.data,partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response({"message": "Update Cart item successfully!!!",'cart item':serializer.data}
@@ -141,13 +141,13 @@ def update_cartitem(request, pk):
 
 
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_order(request, pk):
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         try:
             order = Order.objects.get(pk=pk)
-            serializer = OrderSerializer(order, data=request.data)
+            serializer = OrderSerializer(order, data=request.data,partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response({"message": "Update Order successfully!!!",'cart item':serializer.data}
