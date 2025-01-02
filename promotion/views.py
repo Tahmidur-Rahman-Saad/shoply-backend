@@ -11,72 +11,109 @@ from rest_framework.decorators import permission_classes
 
 
 @api_view(['GET'])
-def show_promotions(request):
+def promotions(request):
     if request.method == 'GET':
         try:
             promotions = Promotion.objects.all()
             serializer = PromotionSerializer(promotions, many=True)
-            return Response({"message": "Shows all the promotions list successfully",'Promotions':serializer.data}
-                        , status=status.HTTP_200_OK)
+            return Response({
+                'code': status.HTTP_200_OK,
+                'response': "Data Received Successfully",
+                'data': serializer.data
+            })
         except:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({
+                'code': status.HTTP_400_BAD_REQUEST,
+                'response': "Data not Valid",
+                'error': serializer.errors
+            })
 
 @api_view(['GET'])
-def retrieve_promotion(request,pk):
+def promotionDetails(request,pk):
     if request.method == 'GET':
         try:
             promotion = Promotion.objects.get(pk=pk)
             serializer = PromotionSerializer(promotion)
-            return Response({"message": "Show the specific promotion successfully",'Promotion':serializer.data}
-                        , status=status.HTTP_200_OK)
+            return Response({
+                'code': status.HTTP_200_OK,
+                'response': "Data Received Successfully",
+                'data': serializer.data
+            })
         except: 
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({
+                'code': status.HTTP_400_BAD_REQUEST,
+                'response': "Data not Valid",
+                'error': serializer.errors
+            })
 
 
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
-def create_promotion(request):
+def promotionCreate(request):
     if request.method == 'POST':
         try:
             serializer = PromotionSerializer(data=request.data)
             if(serializer.is_valid()):
                 serializer.save()
-                return Response({"message": "Promotion Created successfully",'Promotion':serializer.data},
-                                status=status.HTTP_201_CREATED)
+                return Response({
+                    'code': status.HTTP_200_OK,
+                    'response': "Personal Information Updated successfully",
+                    "data": serializer.data
+                })
         except:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'code': status.HTTP_400_BAD_REQUEST,
+                'response': "Data not Valid",
+                'error': serializer.errors
+            })
 
 
 
 
 @api_view(['PATCH'])
 @permission_classes([IsAdminUser])
-def update_promotion(request,pk):
+def promotionUpdate(request,pk):
     if request.method == 'PATCH':
         try:
             promotion = Promotion.objects.get(pk = pk)
             serializer = PromotionSerializer(promotion, data=request.data,partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"message": "Update the promotion successfully",'Promotion':serializer.data},
-                                 status=status.HTTP_201_CREATED)
+                return Response({
+                    'code': status.HTTP_200_OK,
+                    'response': "Personal Information Updated successfully",
+                    "data": serializer.data
+                })
         except:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'code': status.HTTP_400_BAD_REQUEST,
+                'response': "Data not Valid",
+                'error': serializer.errors
+            })
 
 
 
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])
-def delete_promotion(request,pk):
-    if request.method == 'DELETE':
-        try:
-            promotion = Promotion.objects.get(pk = pk)
-            promotion.delete()
-            return Response({"message": "Selected promotion deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-        except:
-            return Response({"message": "Promotion does not deleted!!!."}, status=status.HTTP_400_BAD_REQUEST)
-    
+def promotionDelete(request,pk):
+    try:
+        if Promotion.objects.filter(id=pk).exists():
+            instance = Promotion.objects.get(id=pk)
+            instance.delete()
 
+            return Response({
+                'code': status.HTTP_200_OK,
+                'message': 'Deleted successfully.'
+            })
+        else:
+            return Response({
+                'code': status.HTTP_404_NOT_FOUND,
+                'message': 'Record not found.'
+            })
+    except Exception as e:
+        return Response({
+            'code': status.HTTP_400_BAD_REQUEST,
+            'message': str(e)
+        })
+    
