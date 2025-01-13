@@ -58,7 +58,7 @@ def promotionCreate(request):
                 serializer.save()
                 return Response({
                     'code': status.HTTP_200_OK,
-                    'response': "Personal Information Updated successfully",
+                    'response': "Promotion Created successfully",
                     "data": serializer.data
                 })
         except:
