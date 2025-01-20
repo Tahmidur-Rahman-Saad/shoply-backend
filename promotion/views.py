@@ -68,13 +68,13 @@ def promotionCreate(request):
                 'response': "Data not valid",
                 'error': serializer.errors
             })
-    # except Exception as e:
-    #     # Handle unexpected errors
-    #     return Response({
-    #         'code': status.HTTP_500_INTERNAL_SERVER_ERROR,
-    #         'response': "An unexpected error occurred",
-    #         'error': str(e)
-    #     })
+        # except Exception as e:
+        #     # Handle unexpected errors
+        #     return Response({
+        #         'code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+        #         'response': "An unexpected error occurred",
+        #         'error': str(e)
+        #     })
 
 
 @api_view(['PATCH'])

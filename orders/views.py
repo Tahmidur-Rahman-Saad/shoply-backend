@@ -62,10 +62,16 @@ def cartItemDetails(request,pk):
         try:
             cartitem = CartItems.objects.get(pk=pk)
             serializer = CartItemsSerializer(cartitem)
+            product_details = cartitem.product_id
             return Response({
                 'code': status.HTTP_200_OK,
                 'response': "Data Received Successfully",
-                'data': serializer.data
+                'data': serializer.data,
+                'product': {
+                    'name': product_details.name,
+                    'price': product_details.price,
+                    'product details': product_details.details
+                }
             })
             # return Response({"message": "Show the cart item successfully",'order':serializer.data}
             #             , status=status.HTTP_200_OK)
